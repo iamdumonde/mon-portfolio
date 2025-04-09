@@ -1,5 +1,5 @@
 <template>
-    <div :class="isDarkMode ? 'dark' : ''" class="min-h-screen font-sans">
+    <div :class="[isDarkMode ? 'dark' : '', 'min-h-screen font-sans']">
         <div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
             <!-- Header -->
             <header
@@ -350,10 +350,26 @@ import {
 
 // Dark mode toggle
 const isDarkMode = ref(false);
+console.log(isDarkMode);
+
 const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
-    localStorage.setItem('darkMode', isDarkMode.value);
 };
+// const toggleDarkMode = () => {
+//     isDarkMode.value = !isDarkMode.value;
+//     localStorage.setItem('darkMode', isDarkMode.value);
+// };
+// const toggleDarkMode = () => {
+//     isDarkMode.value = !isDarkMode.value;
+//     localStorage.setItem('darkMode', isDarkMode.value);
+    
+//     // Ajouter ou supprimer la classe dark sur l'élément HTML
+//     if (isDarkMode.value) {
+//         document.documentElement.classList.add('dark');
+//     } else {
+//         document.documentElement.classList.remove('dark');
+//     }
+// };
 
 // Mobile menu
 const isMenuOpen = ref(false);
@@ -467,10 +483,16 @@ let observer;
 
 onMounted(() => {
     // Check for saved dark mode preference
+    // Check for saved dark mode preference
     const savedDarkMode = localStorage.getItem('darkMode');
     if (savedDarkMode === 'true') {
         isDarkMode.value = true;
+        document.documentElement.classList.add('dark');
     }
+    // const savedDarkMode = localStorage.getItem('darkMode');
+    // if (savedDarkMode === 'true') {
+    //     isDarkMode.value = true;
+    // }
 
     // Set up intersection observer for animations
     observer = new IntersectionObserver(
