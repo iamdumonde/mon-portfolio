@@ -6,7 +6,7 @@
                 class="fixed w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 transition-colors duration-300">
                 <div class="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div class="text-xl font-bold">
-                        <span class="text-rose-600">Martin</span> | <span class="text-dark">ABOU</span>
+                        <span class="text-rose-600">Martin</span> | <span class="text-gray-900 dark:text-gray-100 brand-lastname">ABOU</span>
                     </div>
                     <nav class="hidden md:flex space-x-8">
                         <a href="#accueil" class="hover:text-rose-600 transition-colors">Accueil</a>
@@ -54,7 +54,7 @@
                             :class="{ 'translate-y-0 opacity-100': isVisible, 'translate-y-10 opacity-0': !isVisible }"
                             style="transition: all 0.8s ease-out;">
                             <div
-                                class="inline-block px-3 py-1 bg-dark-100 dark:bg-rose-900/30 text-dark dark:text-dark rounded-full text-sm font-medium">
+                                class="inline-block px-3 py-1 rounded-full text-sm font-medium hero-badge">
                                 Développeur Full-Stack & Consultant IA & Débutant Analyste Sécurité & Assistant Virtuel
                             </div>
                             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
@@ -696,6 +696,24 @@ p {
 
 .hover\:text-rose-600:hover, .hover\:text-blue-600:hover {
   color: var(--accent-hover) !important;
+}
+
+/* Force la couleur de "ABOU" en ignorant les overrides globaux */
+.brand-lastname {
+  color: #111827 !important; /* équivalent Tailwind text-gray-900 */
+}
+.dark .brand-lastname {
+  color: #f3f4f6 !important; /* équivalent Tailwind text-gray-100 */
+}
+
+/* Badge hero: clair = texte noir, fond rose foncé; sombre = conserver lisibilité */
+.hero-badge {
+  background-color: #9f1239 !important; /* rose foncé (tailwind rose-900) */
+  color: #0b0f19 !important; /* quasi noir (proche gray-950) */
+}
+.dark .hero-badge {
+  background-color: #9f1239 !important; /* garder le même fond pour cohérence */
+  color: #f3f4f6 !important; /* texte clair en sombre pour contraste */
 }
 
 /* Borders */
