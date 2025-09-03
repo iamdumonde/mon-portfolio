@@ -21,8 +21,8 @@
                             <MoonIcon v-else class="h-5 w-5" />
                         </button>
                         <button @click="isMenuOpen = !isMenuOpen"
-                            class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                            <menu-icon class="h-5 w-5" />
+                            class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300">
+                            <MenuIcon class="h-5 w-5" />
                         </button>
                     </div>
                 </div>
