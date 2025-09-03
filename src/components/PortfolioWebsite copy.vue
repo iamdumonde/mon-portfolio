@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen font-sans">
+    <div :class="[isDarkMode ? 'dark' : '', 'min-h-screen font-sans']">
         <div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
             <!-- Header -->
             <header
@@ -16,9 +16,9 @@
                     </nav>
                     <div class="flex items-center space-x-4">
                         <button @click="toggleDarkMode"
-                            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300">
-                            <SunIcon v-if="isDarkMode" class="h-5 w-5" />
-                            <MoonIcon v-else class="h-5 w-5" />
+                            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                            <sun-icon v-if="isDarkMode" class="h-5 w-5" />
+                            <moon-icon v-else class="h-5 w-5" />
                         </button>
                         <button @click="isMenuOpen = !isMenuOpen"
                             class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
@@ -343,68 +343,25 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { 
-    Sun as SunIcon, 
-    Moon as MoonIcon,
-    Menu as MenuIcon,
-    Github as GithubIcon,
-    Linkedin as LinkedinIcon,
-    Twitter as TwitterIcon,
-    Phone as PhoneIcon,
-    Code as CodeIcon,
-    Cpu as CpuIcon,
-    ExternalLink as ExternalLinkIcon,
-    Mail as MailIcon,
-    MapPin as MapPinIcon
+import {
+    SunIcon, MoonIcon, MenuIcon, GithubIcon, LinkedinIcon, TwitterIcon,
+    PhoneIcon, CodeIcon, CpuIcon, ExternalLinkIcon, MailIcon, MapPinIcon
 } from 'lucide-vue-next';
 
 // Dark mode toggle
 const isDarkMode = ref(false);
 
-// Vérifier la préférence de l'utilisateur au chargement
-const checkDarkModePreference = () => {
-    try {
-        // Vérifier d'abord le localStorage
-        const savedPreference = localStorage.getItem('darkMode');
-        
-        if (savedPreference !== null) {
-            isDarkMode.value = JSON.parse(savedPreference);
-        } else {
-            // Si aucune préférence n'est enregistrée, utiliser la préférence du système
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            isDarkMode.value = prefersDark;
-        }
-        
-        // Forcer l'application du thème
-        applyDarkMode(isDarkMode.value);
-    } catch (error) {
-        console.error('Erreur lors de la vérification du mode sombre:', error);
-    }
-};
-
 const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
-    applyDarkMode(isDarkMode.value);
-    localStorage.setItem('darkMode', JSON.stringify(isDarkMode.value));
-};
+    localStorage.setItem('darkMode', isDarkMode.value);
 
-const applyDarkMode = (isDark) => {
-    if (isDark) {
+    // Ajouter ou supprimer la classe 'dark' sur l'élément HTML
+    if (isDarkMode.value) {
+        console.log(isDarkMode);
+        
         document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
     } else {
         document.documentElement.classList.remove('dark');
-        document.documentElement.setAttribute('data-theme', 'light');
-    }
-};
-
-// Écouter les changements de préférence système
-let darkModeMediaQuery;
-const handleSystemThemeChange = (e) => {
-    // Ne mettre à jour que si l'utilisateur n'a pas de préférence enregistrée
-    if (localStorage.getItem('darkMode') === null) {
-        isDarkMode.value = e.matches;
-        applyDarkMode(e.matches);
     }
 };
 
@@ -519,17 +476,18 @@ const aiProjects = ref([
 let observer;
 
 onMounted(() => {
-    // Initialiser le mode sombre
-    checkDarkModePreference();
-    
-    // Configurer l'écouteur de changement de thème système
-    try {
-        darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        darkModeMediaQuery.addEventListener('change', handleSystemThemeChange);
-    } catch (error) {
-        console.error('Erreur lors de la configuration de l\'écouteur de thème système:', error);
+    // Check for saved dark mode preference
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode === 'true') {
+        isDarkMode.value = true;
+        console.log(savedDarkMode);
+        
+        document.documentElement.classList.add('dark');
     }
-    
+    else {
+        document.documentElement.classList.remove('dark');
+    };
+
     // Set up intersection observer for animations
     observer = new IntersectionObserver(
         (entries) => {
@@ -562,33 +520,22 @@ onMounted(() => {
         const scrollPosition = window.scrollY;
         const heroSection = document.querySelector('#accueil');
         if (heroSection) {
-            // Le sélecteur original '.relative' est trop large et peut causer des effets de parallaxe non désirés sur des éléments imbriqués.
-            // Cibler plus spécifiquement les colonnes de la grille est une meilleure approche.
-            // Attention : cet effet peut entrer en conflit avec les animations d'entrée et impacter les performances.
-            const elements = heroSection.querySelectorAll('.container > .grid > div');
+            const elements = heroSection.querySelectorAll('.relative');
             elements.forEach((el, index) => {
                 const speed = 0.1 * (index + 1);
                 el.style.transform = `translateY(${scrollPosition * speed}px)`;
             });
         }
     };
-    // L'effet de parallaxe peut causer des problèmes de performance. Je le désactive pour le moment.
-    // Vous pouvez le réactiver si vous le souhaitez, idéalement en l'optimisant.
-    // window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll);
 });
 
-// Nettoyer les écouteurs d'événements lors du démontage du composant
 onUnmounted(() => {
-    try {
-        if (darkModeMediaQuery) {
-            darkModeMediaQuery.removeEventListener('change', handleSystemThemeChange);
-        }
-        if (observer) {
-            observer.disconnect();
-        }
-    } catch (error) {
-        console.error('Erreur lors du nettoyage des écouteurs d\'événements:', error);
+    if (observer) {
+        observer.disconnect();
     }
+    window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
@@ -598,176 +545,9 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Light theme */
-:root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #fff5f9;
-  --bg-tertiary: #ffeef7;
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --text-muted: #6b7280;
-  --border-color: #f3e8ff;
-  --accent: #e11d8f;
-  --accent-hover: #be185d;
-  --accent-light: #fdf2f8;
-  --card-bg: #ffffff;
-  --card-hover: #fdf2f8;
-  --header-bg: rgba(255, 255, 255, 0.8);
-}
-
-/* Dark theme */
+/* Dark mode styles */
 .dark {
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
-  --bg-tertiary: #1f1f2e;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
-  --border-color: #374151;
-  --accent: #e11d8f;
-  --accent-hover: #f472b6;
-  --accent-light: #4c1d4f;
-  --card-bg: #1f2937;
-  --card-hover: #2d3748;
-  --header-bg: rgba(17, 24, 39, 0.8);
-  color-scheme: dark;
-}
-
-/* Base styles */
-body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: all 0.3s ease;
-  line-height: 1.6;
-}
-
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-primary);
-  font-weight: 600;
-  line-height: 1.3;
-  margin-bottom: 0.75em;
-}
-
-p {
-  color: var(--text-secondary);
-  margin-bottom: 1.25em;
-}
-
-/* Cards and containers */
-.bg-white, .bg-gray-50 {
-  background-color: var(--card-bg) !important;
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-}
-
-.dark .bg-white, .dark .bg-gray-50 {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-}
-
-.bg-gray-900 {
-  background-color: var(--bg-secondary) !important;
-}
-
-/* Buttons */
-.bg-rose-600, .bg-blue-600 {
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover)) !important;
-  color: white;
-  transition: all 0.2s ease;
-  border: none;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.hover\:bg-rose-700:hover, .hover\:bg-blue-700:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Text colors */
-.text-gray-600, .text-gray-300 {
-  color: var(--text-secondary) !important;
-}
-
-.text-rose-600, .text-blue-600 {
-  color: var(--accent) !important;
-}
-
-.hover\:text-rose-600:hover, .hover\:text-blue-600:hover {
-  color: var(--accent-hover) !important;
-}
-
-/* Borders */
-.border-gray-200, .border-gray-700 {
-  border-color: var(--border-color) !important;
-}
-
-/* Navigation */
-header {
-  background-color: var(--header-bg) !important;
-  border-bottom: 1px solid var(--border-color);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-/* Hover effects */
-.hover\:bg-gray-100:hover, .hover\:bg-gray-800:hover {
-  background-color: var(--bg-tertiary) !important;
-}
-
-/* Form elements */
-input, textarea {
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  transition: all 0.2s ease;
-}
-
-input:focus, textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-  outline: none;
-}
-
-/* Links */
-a:not(.no-style) {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-a:not(.no-style):hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
-}
-
-/* Shadows */
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-}
-
-.dark .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-hover);
+    color-scheme: dark;
 }
 
 /* Animations */
