@@ -6,7 +6,7 @@
                 class="fixed w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 transition-colors duration-300">
                 <div class="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div class="text-xl font-bold">
-                        <span class="text-rose-600">Dev</span>Portfolio
+                        <span class="text-rose-600">Martin</span>ABOU
                     </div>
                     <nav class="hidden md:flex space-x-8">
                         <a href="#accueil" class="hover:text-rose-600 transition-colors">Accueil</a>
@@ -58,7 +58,7 @@
                                 Développeur Full-Stack & Passionné d'IA
                             </div>
                             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                                Bonjour, je suis <span class="text-rose-600">Votre Nom</span>
+                                Bonjour, je suis <span class="text-rose-600">Martin ABOU</span>
                             </h1>
                             <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300">
                                 Je crée des applications web innovantes et des solutions basées sur l'intelligence
