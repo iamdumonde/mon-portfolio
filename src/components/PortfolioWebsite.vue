@@ -6,7 +6,7 @@
                 class="fixed w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 transition-colors duration-300">
                 <div class="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div class="text-xl font-bold">
-                        <span class="text-rose-600">Martin</span>ABOU
+                        <span class="text-rose-600">Martin</span> | <span class="text-dark">ABOU</span>
                     </div>
                     <nav class="hidden md:flex space-x-8">
                         <a href="#accueil" class="hover:text-rose-600 transition-colors">Accueil</a>
@@ -54,8 +54,8 @@
                             :class="{ 'translate-y-0 opacity-100': isVisible, 'translate-y-10 opacity-0': !isVisible }"
                             style="transition: all 0.8s ease-out;">
                             <div
-                                class="inline-block px-3 py-1 bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-200 rounded-full text-sm font-medium">
-                                Développeur Full-Stack & Passionné d'IA
+                                class="inline-block px-3 py-1 bg-dark-100 dark:bg-rose-900/30 text-dark dark:text-dark rounded-full text-sm font-medium">
+                                Développeur Full-Stack & Consultant IA & Débutant Analyste Sécurité & Assistant Virtuel
                             </div>
                             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                                 Bonjour, je suis <span class="text-rose-600">Martin ABOU</span>
